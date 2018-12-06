@@ -3,18 +3,12 @@ import time
 import os
 from signal import pause
 
-
-s = SenseHat()
-s.low_light = True
-
-
 sense = SenseHat()
-sense.set_imu_config(False, False, True)
 sense.clear()
-print(sense.accel)
 
 sense.low_light = True
 sense.set_rotation(180)
+sense.show_message("ready")
 
 X = [0, 100, 0] # Green
 O = [0, 0, 0] # Black
@@ -59,9 +53,17 @@ def pi_shutdown(event):
    sense.show_message("bye bye")
    os.system("sudo shutdown -h now")
 
+def low_light_on(event):
+    sense.low_light=True
+
+def low_light_off(event):
+    sense.low_light=False
+
 sense.stick.direction_down = treelights_on
 sense.stick.direction_up = treelights_off
 sense.stick.direction_middle = pi_shutdown
+sense.stick.direction_left = low_light_off
+sense.stick.direction_right = low_light_on
 
 while True:
     pass
